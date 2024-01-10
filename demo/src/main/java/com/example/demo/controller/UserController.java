@@ -4,23 +4,19 @@ package com.example.demo.controller;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-public class MainController {
+public class UserController {
     @Autowired
     private UserRepository userRepository;
     @GetMapping("/hello")
     public String name(@RequestParam String name){
         return name+ " hello!";
     }
-
     @PostMapping("/register")
     public String register(@RequestParam(required = false) String name){
         User user = new User();
