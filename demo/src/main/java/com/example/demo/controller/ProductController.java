@@ -14,10 +14,7 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private UserRepository userRepository;
-    @GetMapping("/product")
-    public String product(@RequestParam String name){
 
-    }
     @GetMapping("/hello")
     public String name(@RequestParam String name){
         return name+ " hello!";
