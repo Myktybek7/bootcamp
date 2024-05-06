@@ -1,0 +1,257 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayList<String> PlayersNameList = new ArrayList<>();
+
+        System.out.println("To start the game write 'Go' ");
+        System.out.println("Enter the name: ");
+
+        boolean EnteringName = true;
+
+        while (EnteringName) {
+
+            String Name = scanner.next();
+
+            if (Name.equals("Go") || Name.equals("GO") || Name.equals("go")) {
+                EnteringName = false;
+            } else {
+                PlayersNameList.add(Name);
+            }
+        }
+        clearConsole();
+
+        ArrayList<WordAndDescription> word = new ArrayList<>();
+
+        WordAndDescription ball = new WordAndDescription();
+
+        ball.word = "ball";
+        ball.description = "A solid or hollow spherical or egg-shaped object that is kicked, thrown, or hit in a game.";
+
+        word.add(ball);
+
+        WordAndDescription season = new WordAndDescription();
+
+        season.word = "season";
+        season.description = "A division of the year based on changes in weather, ecology, and the number of daylight hours in a given region.";
+
+        word.add(season);
+
+        WordAndDescription piano = new WordAndDescription();
+
+        piano.word = "piano";
+        piano.description = "A keyboard instrument that produces sound when the keys are pressed.";
+
+        word.add(piano);
+
+        WordAndDescription bag = new WordAndDescription();
+
+        bag.word = "bag";
+        bag.description = "A flexible container with an opening at the top, used for carrying things.";
+
+        word.add(bag);
+
+        WordAndDescription everest = new WordAndDescription();
+
+        everest.word = "everest";
+        everest.description = "The highest top at the world";
+
+        word.add(everest);
+
+        WordAndDescription china = new WordAndDescription();
+
+        china.word = "china";
+        china.description = "The most populated country in the world";
+
+        word.add(china);
+
+        WordAndDescription happy = new WordAndDescription();
+
+        happy.word = "happy";
+        happy.description = "Feeling or expressing joy and contentment. Happiness is a positive and pleasant emotional state.";
+
+        word.add(happy);
+
+        WordAndDescription headphones = new WordAndDescription();
+
+        headphones.word = "headphones";
+        headphones.description = "Electronic audio device that people wear over their ears";
+
+        word.add(headphones);
+
+        WordAndDescription jupiter = new WordAndDescription();
+
+        jupiter.word = "jupiter";
+        jupiter.description = "The fifth planet from our Sun and is, by far, the largest planet in the solar system";
+
+        word.add(jupiter);
+
+        WordAndDescription australia = new WordAndDescription();
+
+        australia.word = "australia";
+
+        australia.description = "The only country in the world that covers an entire continent.";
+
+        word.add(australia);
+
+        Collections.shuffle(word);
+
+        Collections.shuffle(PlayersNameList);
+
+        int PlayersOrderIndex = 0;
+
+        ArrayList<Integer> PlayersScoreList = new ArrayList<>();
+
+        ArrayList<Integer> WordIndexes = new ArrayList<>();
+
+        ArrayList<Character> NamedLetters = new ArrayList<>();
+
+        for (int i = 0; i < PlayersNameList.size(); i++) {
+            PlayersScoreList.add(0);
+        }
+
+        boolean winner = true;
+        boolean nextplayer = false;
+
+        while (winner) {
+            nextplayer = false;
+            if (PlayersOrderIndex == PlayersNameList.size()) {
+                PlayersOrderIndex = 0;
+            }
+            for (int i = 0; i < word.get(7).word.length(); i++) {
+                if (checkLetter(i, WordIndexes)) {
+                    System.out.print(word.get(7).word.charAt(i) + " ");
+                } else {
+                    System.out.print("■ ");
+                }
+            }
+            System.out.println();
+            System.out.println(word.get(7).description);
+            System.out.print("Already named letters: ");
+
+
+            for (int i = 0; i < NamedLetters.size(); i++) {
+                System.out.print(NamedLetters.get(i) + ", ");
+            }
+
+            System.out.println();
+
+            System.out.println(PlayersNameList.get(PlayersOrderIndex) + " YOUR TURN");
+
+            String an = scanner.next();
+
+            String PlayersAnswer = an.toLowerCase();
+
+            char[] answeredLetters = PlayersAnswer.toCharArray();
+
+            clearConsole();
+
+            if (PlayersAnswer.length() > 1) {
+                if (word.get(7).word.equals(PlayersAnswer)) {
+                    System.out.println(PlayersNameList.get(PlayersOrderIndex) + " Congrats you won.");
+                    break;
+                } else {
+                    System.out.println(PlayersNameList.get(PlayersOrderIndex) + " Sorry you left the game!");
+                    PlayersNameList.remove(PlayersOrderIndex);
+                }
+            } else if (PlayersAnswer.length() == 1) {
+                if (checkSameLetter(NamedLetters, answeredLetters)) {
+                    System.out.println("Sorry it is already named letter");
+                } else {
+                    if (letteralyChecking(answeredLetters, word.get(7).word, WordIndexes)) {
+                        int score = PlayersScoreList.get(PlayersOrderIndex) + 100;
+                        PlayersScoreList.set(PlayersOrderIndex, score);
+                    } else {
+                        System.out.println("Sorry there is no letter like this");
+                        nextplayer = true;
+                    }
+                    NamedLetters.add(answeredLetters[0]);
+                }
+            }
+            if (avarage(PlayersScoreList, WordIndexes, word.get(7).word, PlayersOrderIndex)) {
+                clearConsole();
+                System.out.println(PlayersNameList.get(PlayersOrderIndex) + " has Max score. Now every player try to guess word.");
+                boolean hasvictory = false;
+                for (int i = 0; i < PlayersNameList.size(); i++) {
+                    if (i != PlayersOrderIndex) {
+                        System.out.println(PlayersNameList.get(i) + " YOUR TURN!");
+                        String answer = scanner.next();
+                        if (answer.equals(word.get(7).word)) {
+                            clearConsole();
+                            System.out.println(PlayersNameList.get(i) + " WON!");
+                            hasvictory = true;
+                        } else {
+                            System.out.println("Sorry you have used you last chance)");
+                            clearConsole();
+                        }
+
+                    }
+                }
+                if (!hasvictory) {
+                    System.out.println("No one guessed the word! " + PlayersNameList.get(PlayersOrderIndex) + ", You won the game!");
+                }
+                break;
+            }
+            if (nextplayer) {
+                PlayersOrderIndex++;
+            }
+        }
+
+    }
+    static void clearConsole () {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    static boolean checkLetter ( int x, ArrayList<Integer > findetWordIndexes){
+        boolean answer = false;
+        for (int i = 0; i < findetWordIndexes.size(); i++) {
+            if (x == findetWordIndexes.get(i)) {
+                answer = true;
+            }
+        }
+        return answer;
+    }
+
+    static boolean letteralyChecking ( char[] answeredLetter, String checkingWord, ArrayList < Integer > IndexesWord){
+        boolean answer = false;
+        for (int i = 0; i < checkingWord.length(); i++) {
+            if (answeredLetter[0] == checkingWord.charAt(i)) {
+                IndexesWord.add(i);
+                answer = true;
+            }
+        }
+        return answer;
+    }
+    static boolean checkSameLetter (ArrayList < Character > namedLetter,char[] PlayersAnswer){
+        boolean answer = false;
+        for (int i = 0; i < namedLetter.size(); i++) {
+            if (PlayersAnswer[0] == namedLetter.get(i)) {
+                answer = true;
+            }
+        }
+        return answer;
+    }
+    static boolean avarage (ArrayList<Integer> PlayersScoreList, ArrayList<Integer> guessedLetters, String word, int PlayersOrder) {
+        int maxScore = (word.length() - guessedLetters.size()) * 100;
+        int max = 0;
+        int max2 = 0;
+        for (int i = 0; i < PlayersScoreList.size(); i++) {
+            if (PlayersScoreList.get(i) > max) {
+                max = PlayersScoreList.get(i);
+            } else if (PlayersScoreList.get(i) > max2) {
+                max2 = PlayersScoreList.get(i);
+            }
+        }
+        if (PlayersScoreList.get(PlayersOrder) == max) {
+            int maxAve = max - max2;
+            return maxScore < maxAve;
+        } else {
+            return false;
+
+        }
+    }
+}
